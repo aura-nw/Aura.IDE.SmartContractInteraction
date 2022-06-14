@@ -1,4 +1,4 @@
-import { makeCosmoshubPath } from '@cosmjs/amino';
+import { makeCosmoshubPath, pubkeyToAddress } from '@cosmjs/amino';
 import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
 import BIP32Factory from 'bip32';
 import { toBase64 } from 'js-base64';
@@ -25,13 +25,13 @@ const generateMnemonic = async () =>{
   let masterKey = bip32.fromSeed(seed);
   
   
-  const key = await  createChildKey(masterKey, 0);
-  const pubkey0 = key.privateKey; 
-  createChildKey(masterKey, 1);
-
+  const account = await  createChildKey(masterKey, 0);
+  // const pubkey0 = key.privateKey; 
+  // createChildKey(masterKey, 1);
+  console.log(account);
   return{
     'mnemonic': mnemonic,
-    'pubkey0': pubkey0
+    'account': account
   }
 }
   
@@ -53,39 +53,44 @@ const createChildKey = async (masterKey, addressIndex) =>{
   const publicKey = hd.publicKey;
   console.log('publicKey: ', toBase64(publicKey));
 
+  let pubkey = { type: 'tendermint/PubKeySecp256k1', value: toBase64(publicKey), }; 
+  const address = pubkeyToAddress(pubkey, 'aura'); 
+  
+  console.log('address: ', address);
   return{
     privateKey: toBase64(privateKey),
-    publicKey: toBase64(publicKey)
+    publicKey: toBase64(publicKey),
+    address: address
   }
 }
   
   
-
 export const createAccount = async () => {
   // let mnemonic =
   //   'rich poverty old cart robot shine bus impulse major sniff pride frozen'
   // const bip39 = require("bip39");
   
   const rawMM = await generateMnemonic();
-  const {mnemonic,pubkey0} = rawMM;
-  const path: any = makeCosmoshubPath(randomIntFromInterval(1, 1000000000))
-  const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, {
-    prefix: 'aura',
-    hdPaths: [path],
-  })
+  // const {mnemonic,pubkey0} = rawMM;
+  // const path: any = makeCosmoshubPath(randomIntFromInterval(1, 1000000000))
+  // const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, {
+  //   prefix: 'aura',
+  //   hdPaths: [path],
+  // })
 
-  const walletAddress = await wallet.getAccounts();
-  const addressString = walletAddress[0].address;
-  const settings = {
-    "mnemonic": mnemonic, 
-    "pubkey0":{
-      "type": "tendermint/PubKeySecp256k1",
-      "value": pubkey0,
-    },
-    "address0": addressString,
-    "address1":addressString
-  } 
- 
-  return settings;
+  // const walletAddress = await wallet.getAccounts();
+  // const addressString = walletAddress[0].address;
+  // const settings = {
+  //   "mnemonic": mnemonic, 
+  //   "pubkey0":{
+  //     "type": "tendermint/PubKeySecp256k1",
+  //     "value": pubkey0,
+  //   },
+  //   "address0": addressString,
+  //   "address1":addressString
+  // } 
+  // sessionStorage.setItem('wallet', JSON.stringify(rawMM));
+  console.log(rawMM);
+  return rawMM;
 }
 

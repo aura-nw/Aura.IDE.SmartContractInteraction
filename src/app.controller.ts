@@ -17,6 +17,8 @@ export class AppController {
         const queryType = request.queryType;
         const settings = request.settings;
         const initContractAddress = request.contractAddress.addressContract; 
+        
+        console.log('initContractAddress------', initContractAddress)
         const appSv = new AppService();
         let result : any = ""
         let sessionAddressContractData;
@@ -27,7 +29,6 @@ export class AppController {
 
         if (queryType == "excute"){
             result = await appSv.callFunctionByName(funcName, funcdata, settings, sessionAddressContractData);
-            
         } else {
             console.log('AppController', sessionAddressContractData)
             result = await appSv.callFunctionByNameQuery(funcName, funcdata, settings,sessionAddressContractData);
@@ -59,6 +60,7 @@ export class AppController {
         return address;
     }
 
+    
     @Post('create-wallet') 
     async createWallet(): Promise<any> {
         return await createAccount();

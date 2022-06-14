@@ -70,18 +70,40 @@ export interface ContractUploadInstructions {
 
 @Injectable()
 export class AppService {
-    //hard code user
     wallet = {
-        mnemonic:
-            'fox undo purpose tip secret whisper almost bulk casual avocado wife swallow',
+        mnemonic:'',
         pubkey0: {
             type: 'tendermint/PubKeySecp256k1',
-            value: 'A3CfC3eCFpd6CGjk0yynBxWx7nGrcTcsX5AXZirTyHPj',
+            value: '',
         },
-        address0: 'aura1nzrfafqxs8tz3guzx3j3z64dp7nuvyzhw967ha',
-        address1: 'aura1ylee4pzmvmknzg6n37nfeadrx5k9tx9qv8d57e',
+        address0: '',
+        address1: '',
     };
 
+    // obj = JSON.parse(sessionStorage.wallet);
+    // wallet = {
+    //     mnemonic:this.obj.mnemonic,
+    //     pubkey0:{
+    //         type: 'tendermint/PubKeySecp256k1',
+    //         value: this.obj.account.publicKey,
+    //     },
+    //     address0:this.obj.account.address,
+    //     address1:this.obj.account.address,
+    // }
+    
+    // wallet = {
+    //     mnemonic: "tree glad link view design inherit bicycle flee short success notable valley",
+    //     publey0: {
+    //         type:'tendermint/PubKeySecp256k1',
+    //         value:'A9kJ1MKp5RHtuxtTEeJKuSHZ8t6NJvSFQ/e9CCWaGe5q',
+    //     },
+    //     address0:'aura1t84aptvz33nf9cugmurjl9n5y5p38css28fjry',
+    // //     // address0: {
+    // //     //     "privateKey": "tT2Ryslz8fc19YnLInBrzPHVnhHhfkGy6rADSFc12J4=",
+    // //     //     "publicKey": "A8054JyKxIhVNL1SVohQEHHbF3mgIBOWaTm+vIeHtK4L",
+    // //     //     "address": "aura1eyy2jxrt0q6eqhdzp0wyv2nta43xaxssa7dc6u"
+    // }
+    
     //point to localhost aurad
     wasmd = {
         blockTime: 1_000, // ms
@@ -121,7 +143,8 @@ export class AppService {
     }
 
    async InitContractAddress(settings):Promise<any> {
-
+        console.log(settings);
+        
         this.loadWasm(settings.wasm)
         console.log("objects settings InitCOntractADdress", settings);
         
@@ -230,6 +253,9 @@ export class AppService {
             resultExecute = error;
             txId = resultExecute.txId;
         }
+
+
+        
     }
 
     async callFunctionByNameQuery(funcName: any, funcData: any, settings: any, contractAddress: any){
